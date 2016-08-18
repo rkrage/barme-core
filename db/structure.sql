@@ -96,6 +96,52 @@ CREATE TABLE beers (
 
 
 --
+-- Name: beers_breweries; Type: TABLE; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE TABLE beers_breweries (
+    beer_brewery_id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    beer_id uuid NOT NULL,
+    brewery_id uuid NOT NULL
+);
+
+
+--
+-- Name: breweries; Type: TABLE; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE TABLE breweries (
+    brewery_id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    name character varying NOT NULL,
+    description text,
+    website character varying,
+    city character varying,
+    region character varying,
+    country character varying,
+    established integer,
+    image_icon character varying,
+    image_medium character varying,
+    image_large character varying,
+    image_square_medium character varying,
+    image_square_large character varying,
+    external_id character varying NOT NULL,
+    brewery_type_id uuid,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: brewery_types; Type: TABLE; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE TABLE brewery_types (
+    brewery_type_id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    brewery_type text NOT NULL
+);
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: core; Owner: -; Tablespace: 
 --
 
@@ -209,11 +255,35 @@ ALTER TABLE ONLY beer_styles
 
 
 --
+-- Name: beers_breweries_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY beers_breweries
+    ADD CONSTRAINT beers_breweries_pkey PRIMARY KEY (beer_brewery_id);
+
+
+--
 -- Name: beers_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY beers
     ADD CONSTRAINT beers_pkey PRIMARY KEY (beer_id);
+
+
+--
+-- Name: breweries_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY breweries
+    ADD CONSTRAINT breweries_pkey PRIMARY KEY (brewery_id);
+
+
+--
+-- Name: brewery_types_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY brewery_types
+    ADD CONSTRAINT brewery_types_pkey PRIMARY KEY (brewery_type_id);
 
 
 --
@@ -279,7 +349,35 @@ CREATE INDEX index_beer_styles_on_beer_category_id ON beer_styles USING btree (b
 -- Name: index_beer_styles_on_external_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_beer_styles_on_external_id ON beer_styles USING btree (external_id);
+CREATE UNIQUE INDEX index_beer_styles_on_external_id ON beer_styles USING btree (external_id);
+
+
+--
+-- Name: index_beer_styles_on_name; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beer_styles_on_name ON beer_styles USING btree (name);
+
+
+--
+-- Name: index_beers_breweries_on_beer_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beers_breweries_on_beer_id ON beers_breweries USING btree (beer_id);
+
+
+--
+-- Name: index_beers_breweries_on_beer_id_and_brewery_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_beers_breweries_on_beer_id_and_brewery_id ON beers_breweries USING btree (beer_id, brewery_id);
+
+
+--
+-- Name: index_beers_breweries_on_brewery_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beers_breweries_on_brewery_id ON beers_breweries USING btree (brewery_id);
 
 
 --
@@ -293,7 +391,56 @@ CREATE INDEX index_beers_on_beer_style_id ON beers USING btree (beer_style_id);
 -- Name: index_beers_on_external_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_beers_on_external_id ON beers USING btree (external_id);
+CREATE UNIQUE INDEX index_beers_on_external_id ON beers USING btree (external_id);
+
+
+--
+-- Name: index_beers_on_name; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beers_on_name ON beers USING btree (name);
+
+
+--
+-- Name: index_breweries_on_brewery_type_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_breweries_on_brewery_type_id ON breweries USING btree (brewery_type_id);
+
+
+--
+-- Name: index_breweries_on_city; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_breweries_on_city ON breweries USING btree (city);
+
+
+--
+-- Name: index_breweries_on_country; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_breweries_on_country ON breweries USING btree (country);
+
+
+--
+-- Name: index_breweries_on_external_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_breweries_on_external_id ON breweries USING btree (external_id);
+
+
+--
+-- Name: index_breweries_on_name; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_breweries_on_name ON breweries USING btree (name);
+
+
+--
+-- Name: index_breweries_on_region; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_breweries_on_region ON breweries USING btree (region);
 
 
 --
@@ -354,11 +501,27 @@ ALTER TABLE ONLY beers
 
 
 --
+-- Name: fk_rails_3a98fac357; Type: FK CONSTRAINT; Schema: core; Owner: -
+--
+
+ALTER TABLE ONLY breweries
+    ADD CONSTRAINT fk_rails_3a98fac357 FOREIGN KEY (brewery_type_id) REFERENCES brewery_types(brewery_type_id);
+
+
+--
 -- Name: fk_rails_49a14e1eff; Type: FK CONSTRAINT; Schema: core; Owner: -
 --
 
 ALTER TABLE ONLY beer_styles
     ADD CONSTRAINT fk_rails_49a14e1eff FOREIGN KEY (beer_category_id) REFERENCES beer_categories(beer_category_id);
+
+
+--
+-- Name: fk_rails_63550c57d3; Type: FK CONSTRAINT; Schema: core; Owner: -
+--
+
+ALTER TABLE ONLY beers_breweries
+    ADD CONSTRAINT fk_rails_63550c57d3 FOREIGN KEY (brewery_id) REFERENCES breweries(brewery_id);
 
 
 --
@@ -378,11 +541,19 @@ ALTER TABLE ONLY oauth_access_grants
 
 
 --
+-- Name: fk_rails_d3e2dc97ce; Type: FK CONSTRAINT; Schema: core; Owner: -
+--
+
+ALTER TABLE ONLY beers_breweries
+    ADD CONSTRAINT fk_rails_d3e2dc97ce FOREIGN KEY (beer_id) REFERENCES beers(beer_id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO core, public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160812215819'), ('20160812215939'), ('20160812235617'), ('20160817003121'), ('20160817024205'), ('20160817031519'), ('20160817031619');
+INSERT INTO schema_migrations (version) VALUES ('20160812215819'), ('20160812215939'), ('20160812235617'), ('20160817003121'), ('20160817024205'), ('20160817031519'), ('20160817031619'), ('20160818152118'), ('20160818152147'), ('20160818154628');
 
 
