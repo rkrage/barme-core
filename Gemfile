@@ -27,6 +27,8 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'doorkeeper'
 gem 'devise'
+gem 'lookup_by', git: 'git@github.com:companygardener/lookup_by.git', branch: 'rails5'
+gem 'figgy'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

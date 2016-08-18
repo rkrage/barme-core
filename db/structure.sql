@@ -51,6 +51,51 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: beer_categories; Type: TABLE; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE TABLE beer_categories (
+    beer_category_id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    beer_category text NOT NULL
+);
+
+
+--
+-- Name: beer_styles; Type: TABLE; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE TABLE beer_styles (
+    beer_style_id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    name text NOT NULL,
+    description text,
+    external_id integer NOT NULL,
+    beer_category_id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: beers; Type: TABLE; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE TABLE beers (
+    beer_id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    name character varying NOT NULL,
+    description text,
+    abv numeric,
+    ibu integer,
+    label_icon character varying,
+    label_medium character varying,
+    label_large character varying,
+    external_id character varying NOT NULL,
+    beer_style_id uuid,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: core; Owner: -; Tablespace: 
 --
 
@@ -148,6 +193,30 @@ CREATE TABLE schema_migrations (
 SET search_path = core, pg_catalog;
 
 --
+-- Name: beer_categories_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY beer_categories
+    ADD CONSTRAINT beer_categories_pkey PRIMARY KEY (beer_category_id);
+
+
+--
+-- Name: beer_styles_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY beer_styles
+    ADD CONSTRAINT beer_styles_pkey PRIMARY KEY (beer_style_id);
+
+
+--
+-- Name: beers_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY beers
+    ADD CONSTRAINT beers_pkey PRIMARY KEY (beer_id);
+
+
+--
 -- Name: oauth_access_grants_pkey; Type: CONSTRAINT; Schema: core; Owner: -; Tablespace: 
 --
 
@@ -200,6 +269,34 @@ ALTER TABLE ONLY schema_migrations
 SET search_path = core, pg_catalog;
 
 --
+-- Name: index_beer_styles_on_beer_category_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beer_styles_on_beer_category_id ON beer_styles USING btree (beer_category_id);
+
+
+--
+-- Name: index_beer_styles_on_external_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beer_styles_on_external_id ON beer_styles USING btree (external_id);
+
+
+--
+-- Name: index_beers_on_beer_style_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beers_on_beer_style_id ON beers USING btree (beer_style_id);
+
+
+--
+-- Name: index_beers_on_external_id; Type: INDEX; Schema: core; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_beers_on_external_id ON beers USING btree (external_id);
+
+
+--
 -- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: core; Owner: -; Tablespace: 
 --
 
@@ -249,6 +346,22 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
+-- Name: fk_rails_11f662addb; Type: FK CONSTRAINT; Schema: core; Owner: -
+--
+
+ALTER TABLE ONLY beers
+    ADD CONSTRAINT fk_rails_11f662addb FOREIGN KEY (beer_style_id) REFERENCES beer_styles(beer_style_id);
+
+
+--
+-- Name: fk_rails_49a14e1eff; Type: FK CONSTRAINT; Schema: core; Owner: -
+--
+
+ALTER TABLE ONLY beer_styles
+    ADD CONSTRAINT fk_rails_49a14e1eff FOREIGN KEY (beer_category_id) REFERENCES beer_categories(beer_category_id);
+
+
+--
 -- Name: fk_rails_732cb83ab7; Type: FK CONSTRAINT; Schema: core; Owner: -
 --
 
@@ -270,6 +383,6 @@ ALTER TABLE ONLY oauth_access_grants
 
 SET search_path TO core, public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160812215819'), ('20160812215939'), ('20160812235617'), ('20160817003121');
+INSERT INTO schema_migrations (version) VALUES ('20160812215819'), ('20160812215939'), ('20160812235617'), ('20160817003121'), ('20160817024205'), ('20160817031519'), ('20160817031619');
 
 
