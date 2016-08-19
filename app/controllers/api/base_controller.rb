@@ -1,3 +1,4 @@
-class BaseController < ActionController::API
-  # some api specific stuff
+module Api
+  class BaseController < ActionController::API
+  end
 end
