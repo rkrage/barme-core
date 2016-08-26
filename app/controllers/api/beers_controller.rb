@@ -6,8 +6,12 @@ module Api
 
     private
 
+    def beer_id
+      params[:id]
+    end
+
     def beer
-      @beer ||= Beer.find(params[:id])
+      @beer ||= Beer.cached_json(beer_id) || Beer.find(beer_id)
     end
   end
 end

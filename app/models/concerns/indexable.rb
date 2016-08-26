@@ -15,6 +15,12 @@ module Indexable
       "#{name.demodulize}Serializer".constantize
     end
 
+    def self.cached_json(id)
+      __elasticsearch__.client.get(index: index_name, type: document_type, id: id)['_source']
+    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+      nil
+    end
+
     def index_document
       __elasticsearch__.index_document
     end
