@@ -1,3 +1,9 @@
+Beer.skip_callback(:commit, :after, :index_document)
+Beer.skip_callback(:commit, :after, :index_breweries)
+Brewery.skip_callback(:commit, :after, :index_document)
+Brewery.skip_callback(:commit, :after, :index_beers)
+BeerStyle.skip_callback(:commit, :after, :index_beers)
+
 beer_filename = Rails.root.join('dump', 'beers.json')
 
 if File.file?(beer_filename)
@@ -41,7 +47,6 @@ if File.file?(beer_filename)
     else
       breweries = []
     end
-
 
     Beer.where(external_id: beer_hash['id']).first_or_initialize.update!(
       name:         beer_hash['name'],

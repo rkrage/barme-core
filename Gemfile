@@ -30,6 +30,7 @@ gem 'devise'
 gem 'lookup_by', git: 'git@github.com:companygardener/lookup_by.git', branch: 'rails5'
 gem 'figgy'
 gem 'active_model_serializers', '~> 0.10.0'
+gem 'elasticsearch-model', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
