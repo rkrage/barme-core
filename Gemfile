@@ -27,10 +27,13 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'doorkeeper'
 gem 'devise'
-gem 'lookup_by', git: 'git@github.com:companygardener/lookup_by.git', branch: 'rails5'
+gem 'lookup_by', github: 'companygardener/lookup_by', branch: 'rails5'
 gem 'figgy'
 gem 'active_model_serializers', '~> 0.10.0'
-gem 'elasticsearch-model', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
+gem 'elasticsearch-model', github: 'elasticsearch/elasticsearch-rails'
+gem 'sidekiq'
+gem 'sinatra', github: 'sinatra', require: false
+gem 'redis-namespace'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

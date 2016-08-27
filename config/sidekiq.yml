@@ -1,0 +1,17 @@
+production:
+  :concurrency: 10
+
+staging:
+  :concurrency: 5
+
+integration:
+  :concurrency: 5
+
+development:
+  :concurrency: 2
+
+test:
+  :concurrency: 0
+
+:queues:
+  - default

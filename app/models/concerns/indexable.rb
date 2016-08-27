@@ -22,19 +22,21 @@ module Indexable
     end
 
     def index_document
-      __elasticsearch__.index_document
-    end
-
-    def update_document
-      __elasticsearch__.update_document
+      index_async(:index_document)
     end
 
     def delete_document
-      __elasticsearch__.delete_document
+      index_async(:delete_document)
     end
 
-    def as_indexed_json(ignore)
+    def as_indexed_json(ignore={})
       self.class.serializer.new(self).as_json
+    end
+
+    private
+
+    def index_async(operation)
+      IndexWorker.perform_async(id, self.class.name, operation)
     end
   end
 end
