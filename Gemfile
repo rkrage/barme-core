@@ -41,7 +41,8 @@ gem 'redis-namespace'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-  gem 'pry-byebug'
+  gem 'pry'
+  gem 'pry-byebug', require: false
   gem 'pry-rails'
   gem 'rspec-rails'
   gem 'rspec-mocks'
@@ -52,6 +53,7 @@ group :development, :test do
   gem 'ffaker'
   gem 'rubocop'
   gem 'webmock', require: false
+  gem 'bond', require: false
 end
 
 group :test do

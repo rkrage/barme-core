@@ -11,14 +11,16 @@ module Indexable
       include_related.import
     end
 
-    def self.serializer
-      "#{name.demodulize}Serializer".constantize
-    end
-
     def self.cached_json(id)
       __elasticsearch__.client.get(index: index_name, type: document_type, id: id)['_source']
     rescue Elasticsearch::Transport::Transport::Errors::NotFound
       nil
+    end
+
+    def self.first_or_initialize_by_id(id)
+      find(id)
+    rescue ActiveRecord::RecordNotFound
+      new(id: id)
     end
 
     def index_document
@@ -29,8 +31,12 @@ module Indexable
       index_async(:delete_document)
     end
 
+    def serializer
+      ActiveModelSerializers::SerializableResource.new(self).serializer_instance
+    end
+
     def as_indexed_json(ignore={})
-      self.class.serializer.new(self).as_json
+      serializer.as_json
     end
 
     private
