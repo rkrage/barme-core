@@ -2,7 +2,7 @@ Beer.skip_callback(:commit, :after, :index_document)
 Beer.skip_callback(:commit, :after, :index_breweries)
 Brewery.skip_callback(:commit, :after, :index_document)
 Brewery.skip_callback(:commit, :after, :index_beers)
-BeerStyle.skip_callback(:commit, :after, :index_beers)
+BeerStyle.skip_callback(:commit, :after, :index_beers_and_breweries)
 
 beer_filename = Rails.root.join('dump', 'beers.json')
 
